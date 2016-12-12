@@ -12,5 +12,5 @@ RUN (ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
 
 USER sabnzbd
 EXPOSE 8080
-ENTRYPOINT ["/usr/bin/sabnzbdplus","--config-file","/etc/sabnzbd","--browser","0","--console","--server"]
-CMD [":8080"]
+ENTRYPOINT ["/usr/bin/sabnzbdplus"]
+CMD ["--config-file","/etc/sabnzbd","--browser","0","--console","--server",":8080"]
