@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:sid
 MAINTAINER Matt Bentley <mbentley@mbentley.net>
 
 RUN (sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
