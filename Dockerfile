@@ -3,7 +3,7 @@ MAINTAINER Matt Bentley <mbentley@mbentley.net>
 
 RUN (sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y sabnzbdplus)
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates sabnzbdplus)
 RUN (ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
   groupadd -g 501 sabnzbd &&\
   useradd -u 501 -g 501 -d /etc/sabnzbd sabnzbd &&\
