@@ -1,7 +1,12 @@
-mbentley/sabnzbd
-================
+# mbentley/sabnzbd
 
 docker image for sabnzbd
+based off of debian:bullseye or debian:sid
+
+## Tags
+
+* `latest` ([Dockerfile](./Dockerfile))
+* `sid` ([Dockerfile.sid](./Dockerfile.sid))
 
 To pull this image:
 `docker pull mbentley/sabnzbd`
