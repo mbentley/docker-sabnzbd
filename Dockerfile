@@ -1,4 +1,5 @@
-FROM debian:bullseye
+# rebased/repackaged base image that only updates existing packages
+FROM mbentley/debian:bullseye
 MAINTAINER Matt Bentley <mbentley@mbentley.net>
 
 RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
