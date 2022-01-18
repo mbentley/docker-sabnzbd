@@ -1,0 +1,40 @@
+# rebased/repackaged base image that only updates existing packages
+FROM mbentley/debian:bullseye
+LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
+
+# install dependencies
+RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
+  apt-get update &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates flac lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
+  echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+  locale-gen &&\
+  rm -rf /var/lib/apt/lists/*
+
+# install sabnzbd from source (3.5.0-rc4)
+RUN cd /tmp &&\
+  wget "https://github.com/sabnzbd/sabnzbd/releases/download/3.5.0RC4/SABnzbd-3.5.0RC4-src.tar.gz" &&\
+  tar xvf SABnzbd-3.5.0RC4-src.tar.gz &&\
+  rm SABnzbd-3.5.0RC4-src.tar.gz &&\
+  mv SABnzbd-3.5.0RC4 /opt/sabnzbd &&\
+  cd /opt/sabnzbd &&\
+  python3 -m pip install -r requirements.txt -U &&\
+  python3 -m pip install wheel
+
+# create non-root user
+RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
+  groupadd -g 501 sabnzbd &&\
+  useradd -u 501 -g 501 -d /etc/sabnzbd sabnzbd &&\
+  mkdir /etc/sabnzbd &&\
+  chown -R sabnzbd:sabnzbd /etc/sabnzbd
+
+# set default environment variables
+ENV LANG=en_US.UTF-8 \
+  LANGUAGE=en_US:en \
+  LC_ALL=en_US.UTF-8
+
+USER sabnzbd
+EXPOSE 8080
+WORKDIR /opt/sabnzbd
+ENTRYPOINT ["python3","-OO","SABnzbd.py"]
+CMD ["--config-file","/etc/sabnzbd","--browser","0","--console","--server",":8080"]

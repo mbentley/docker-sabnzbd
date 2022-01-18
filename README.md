@@ -7,6 +7,7 @@ based off of debian:bullseye or debian:sid
 
 * `latest` ([Dockerfile](./Dockerfile))
 * `sid` ([Dockerfile.sid](./Dockerfile.sid))
+* `rc` ([Dockerfile.rc](./Dockerfile.rc))
 
 To pull this image:
 `docker pull mbentley/sabnzbd`
