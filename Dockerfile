@@ -2,25 +2,42 @@
 FROM mbentley/debian:bullseye
 LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
 
+# install dependencies
 RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates flac lame locales mkvtoolnix sabnzbdplus unzip &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
   echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
   sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen &&\
   rm -rf /var/lib/apt/lists/*
 
+# set major.minor version we want to install
+ARG SABNZBD_MAJ_MIN="3.5"
+
+# install sabnzbd from source
+RUN cd /tmp &&\
+  SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep "${SABNZBD_MAJ_MIN}." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\
+  wget "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
+  tar xvf "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
+  rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
+  mv "SABnzbd-${SABNZBD_VERSION}" /opt/sabnzbd &&\
+  cd /opt/sabnzbd &&\
+  python3 -m pip install -r requirements.txt -U
+
+# create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
   groupadd -g 501 sabnzbd &&\
   useradd -u 501 -g 501 -d /etc/sabnzbd sabnzbd &&\
   mkdir /etc/sabnzbd &&\
   chown -R sabnzbd:sabnzbd /etc/sabnzbd
 
+# set default environment variables
 ENV LANG=en_US.UTF-8 \
   LANGUAGE=en_US:en \
   LC_ALL=en_US.UTF-8
 
 USER sabnzbd
 EXPOSE 8080
-ENTRYPOINT ["/usr/bin/sabnzbdplus"]
+WORKDIR /opt/sabnzbd
+ENTRYPOINT ["python3","-OO","SABnzbd.py"]
 CMD ["--config-file","/etc/sabnzbd","--browser","0","--console","--server",":8080"]

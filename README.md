@@ -1,12 +1,12 @@
 # mbentley/sabnzbd
 
 docker image for sabnzbd
-based off of debian:bullseye or debian:sid
+based off of debian:bullseye
 
 ## Tags
 
-* `latest` ([Dockerfile](./Dockerfile))
-* `sid` ([Dockerfile.sid](./Dockerfile.sid))
+* `latest`, `3.5` ([Dockerfile](./Dockerfile))
+* `3.4` ([Dockerfile](./Dockerfile))
 * `rc` ([Dockerfile.rc](./Dockerfile.rc))
 
 To pull this image:
