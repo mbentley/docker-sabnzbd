@@ -1,6 +1,6 @@
 # mbentley/sabnzbd
 
-docker image for sabnzbd
+docker image for sabnzbd (from source)
 based off of debian:bullseye
 
 ## Tags
