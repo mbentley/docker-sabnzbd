@@ -33,18 +33,17 @@ RUN cd /tmp &&\
   rm "${NZB_NOTIFY_VERSION}.tar.gz" &&\
   cd /opt/nzb-notify &&\
   pip install --no-cache-dir -r requirements.txt &&\
-  ln -s /usr/bin/python3 /usr/local/bin/python &&\
-  mkdir /etc/sabnzbd/scripts &&\
-  cd /etc/sabnzbd/scripts &&\
-  ln -s /opt/nzb-notify/Notify.py . &&\
-  ln -s /opt/nzb-notify/sabnzbd-notify.py . &&\
-  ln -s /opt/nzb-notify/Notify .
+  ln -s /usr/bin/python3 /usr/local/bin/python
 
 # create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
   groupadd -g 501 sabnzbd &&\
   useradd -u 501 -g 501 -d /etc/sabnzbd sabnzbd &&\
-  mkdir /etc/sabnzbd &&\
+  mkdir -p /etc/sabnzbd/scripts &&\
+  cd /etc/sabnzbd/scripts &&\
+  ln -s /opt/nzb-notify/Notify.py . &&\
+  ln -s /opt/nzb-notify/sabnzbd-notify.py . &&\
+  ln -s /opt/nzb-notify/Notify . &&\
   chown -R sabnzbd:sabnzbd /etc/sabnzbd
 
 # set default environment variables
