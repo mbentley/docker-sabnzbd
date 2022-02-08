@@ -33,7 +33,12 @@ RUN cd /tmp &&\
   rm "${NZB_NOTIFY_VERSION}.tar.gz" &&\
   cd /opt/nzb-notify &&\
   pip install --no-cache-dir -r requirements.txt &&\
-  ln -s /usr/bin/python3 /usr/local/bin/python
+  ln -s /usr/bin/python3 /usr/local/bin/python &&\
+  mkdir /etc/sabnzbd/scripts &&\
+  cd /etc/sabnzbd/scripts &&\
+  ln -s /opt/nzb-notify/Notify.py . &&\
+  ln -s /opt/nzb-notify/sabnzbd-notify.py . &&\
+  ln -s /opt/nzb-notify/Notify .
 
 # create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
