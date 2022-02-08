@@ -14,12 +14,23 @@ RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
 # install sabnzbd from source
 RUN cd /tmp &&\
   SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep -iE RC | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\
-  wget "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
+  wget -nv "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   tar xvf "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   mv "SABnzbd-${SABNZBD_VERSION}" /opt/sabnzbd &&\
   cd /opt/sabnzbd &&\
-  python3 -m pip install -r requirements.txt -U
+  python3 -m pip install --no-cache-dir -r requirements.txt -U
+
+# install nzb-notify (https://github.com/caronc/nzb-notify)
+RUN cd /tmp &&\
+  NZB_NOTIFY_VERSION="$(if [ -z "${NZB_NOTIFY_VERSION}" ]; then wget -q -O - https://api.github.com/repos/caronc/nzb-notify/releases | jq -r '.[]|.tag_name' | head -n 1; else echo "${NZB_NOTIFY_VERSION}"; fi)" &&\
+  wget -nv "https://github.com/caronc/nzb-notify/archive/refs/tags/${NZB_NOTIFY_VERSION}.tar.gz" &&\
+  tar xvf "${NZB_NOTIFY_VERSION}.tar.gz" &&\
+  mv nzb-notify-* /opt/nzb-notify &&\
+  rm "${NZB_NOTIFY_VERSION}.tar.gz" &&\
+  cd /opt/nzb-notify &&\
+  pip install --no-cache-dir -r requirements.txt &&\
+  ln -s /usr/bin/python3 /usr/local/bin/python
 
 # create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
