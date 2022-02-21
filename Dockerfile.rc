@@ -11,6 +11,9 @@ RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   locale-gen &&\
   rm -rf /var/lib/apt/lists/*
 
+# set version build arg
+ARG SABNZBD_VERSION
+
 # install sabnzbd from source
 RUN cd /tmp &&\
   SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep -iE RC | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\

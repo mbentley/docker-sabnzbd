@@ -13,10 +13,11 @@ RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
 
 # set major.minor version we want to install
 ARG SABNZBD_MAJ_MIN="3.5"
+ARG SABNZBD_VERSION
 
 # install sabnzbd from source
 RUN cd /tmp &&\
-  SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep "${SABNZBD_MAJ_MIN}." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\
+  SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep "${SABNZBD_MAJ_MIN}\." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\
   wget -nv "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   tar xvf "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
