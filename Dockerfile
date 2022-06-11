@@ -12,7 +12,7 @@ RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   rm -rf /var/lib/apt/lists/*
 
 # set major.minor version we want to install
-ARG SABNZBD_MAJ_MIN="3.5"
+ARG SABNZBD_MAJ_MIN="3.6"
 ARG SABNZBD_VERSION
 
 # install sabnzbd from source

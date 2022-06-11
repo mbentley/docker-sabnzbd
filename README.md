@@ -5,7 +5,8 @@ based off of debian:bullseye
 
 ## Tags
 
-* `latest`, `3.5` ([Dockerfile](./Dockerfile))
+* `latest`, `3.6` ([Dockerfile](./Dockerfile))
+* `3.5` ([Dockerfile](./Dockerfile))
 * `3.4` ([Dockerfile](./Dockerfile))
 * `rc` ([Dockerfile.rc](./Dockerfile.rc))
 
