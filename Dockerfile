@@ -5,7 +5,7 @@ LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
 # install dependencies
 RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
   echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
   sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen &&\
