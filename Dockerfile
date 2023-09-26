@@ -1,9 +1,9 @@
 # rebased/repackaged base image that only updates existing packages
-FROM mbentley/debian:bullseye
+FROM mbentley/debian:bookworm
 LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
 
 # install dependencies
-RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
+RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources &&\
   apt-get update &&\
   DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
   echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
@@ -12,7 +12,7 @@ RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list &&\
   rm -rf /var/lib/apt/lists/*
 
 # set major.minor version we want to install
-ARG SABNZBD_MAJ_MIN="3.6"
+ARG SABNZBD_MAJ_MIN="4.1"
 ARG SABNZBD_VERSION
 
 # install sabnzbd from source
@@ -23,7 +23,7 @@ RUN cd /tmp &&\
   rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   mv "SABnzbd-${SABNZBD_VERSION}" /opt/sabnzbd &&\
   cd /opt/sabnzbd &&\
-  python3 -m pip install --no-cache-dir -r requirements.txt -U
+  python3 -m pip install --break-system-packages --no-cache-dir -r requirements.txt -U
 
 # install nzb-notify (https://github.com/caronc/nzb-notify)
 RUN cd /tmp &&\
@@ -33,7 +33,7 @@ RUN cd /tmp &&\
   mv nzb-notify-* /opt/nzb-notify &&\
   rm "${NZB_NOTIFY_VERSION}.tar.gz" &&\
   cd /opt/nzb-notify &&\
-  pip install --no-cache-dir -r requirements.txt &&\
+  pip install --break-system-packages --no-cache-dir -r requirements.txt &&\
   ln -s /usr/bin/python3 /usr/local/bin/python
 
 # create non-root user
