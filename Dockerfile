@@ -2,13 +2,32 @@
 FROM mbentley/debian:bookworm
 LABEL maintainer="Matt Bentley <mbentley@mbentley.net>"
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 # install dependencies
 RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources &&\
   apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full par2 python3-setuptools python3-pip unrar unzip wget &&\
+  apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full python3-setuptools python3-pip unrar unzip wget &&\
   echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
   sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen &&\
+  rm -rf /var/lib/apt/lists/*
+
+# set par2cmdline-turbo version to install
+ARG PAR2CMDLINETURBO_VER="v1.1.0"
+
+# install par2cmdline-turbo
+RUN apt-get update &&\
+  apt-get install --no-install-recommends -y xz-utils &&\
+  cd /tmp &&\
+  wget -nv "https://github.com/animetosho/par2cmdline-turbo/releases/download/${PAR2CMDLINETURBO_VER}/par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64.xz" &&\
+  xz -d -v "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64.xz" &&\
+  chmod +x "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64" &&\
+  mv -v "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64" /usr/local/bin/par2 &&\
+  cd /usr/local/bin &&\
+  for LINK in par2create par2repair par2verify; do ln -sv par2 "${LINK}"; done &&\
+  apt-get purge -y xz-utils &&\
+  apt-get autoremove -y &&\
   rm -rf /var/lib/apt/lists/*
 
 # set major.minor version we want to install
