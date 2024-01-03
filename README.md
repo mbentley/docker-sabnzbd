@@ -5,7 +5,8 @@ based off of debian:bookworm
 
 ## Tags
 
-* `latest`, `4.1`, `4` ([Dockerfile](./Dockerfile))
+* `latest`, `4.2`, `4` ([Dockerfile](./Dockerfile))
+* `4.1`, ([Dockerfile](./Dockerfile))
 * `4.0`, ([Dockerfile](./Dockerfile))
 * `3.7`, `3` ([Dockerfile](./Dockerfile))
 * `rc` ([Dockerfile.rc](./Dockerfile.rc))

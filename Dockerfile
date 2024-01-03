@@ -14,7 +14,7 @@ RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.l
   rm -rf /var/lib/apt/lists/*
 
 # set par2cmdline-turbo version to install
-ARG PAR2CMDLINETURBO_VER="v1.1.0"
+ARG PAR2CMDLINETURBO_VER="v1.1.1"
 
 # install par2cmdline-turbo
 RUN apt-get update &&\
@@ -31,7 +31,7 @@ RUN apt-get update &&\
   rm -rf /var/lib/apt/lists/*
 
 # set major.minor version we want to install
-ARG SABNZBD_MAJ_MIN="4.1"
+ARG SABNZBD_MAJ_MIN="4.2"
 ARG SABNZBD_VERSION
 
 # install sabnzbd from source
