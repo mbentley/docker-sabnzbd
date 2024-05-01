@@ -31,7 +31,7 @@ RUN apt-get update &&\
   rm -rf /var/lib/apt/lists/*
 
 # set major.minor version we want to install
-ARG SABNZBD_MAJ_MIN="4.2"
+ARG SABNZBD_MAJ_MIN="4.3"
 ARG SABNZBD_VERSION
 
 # install sabnzbd from source
