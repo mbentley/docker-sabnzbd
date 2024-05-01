@@ -44,8 +44,10 @@ RUN cd /tmp &&\
   cd /opt/sabnzbd &&\
   python3 -m pip install --break-system-packages --no-cache-dir -r requirements.txt -U
 
+ARG SKIP_NZB_NOTIFY="false"
+
 # install nzb-notify (https://github.com/caronc/nzb-notify)
-RUN cd /tmp &&\
+RUN if [ "${SKIP_NZB_NOTIFY}" != "true" ]; then cd /tmp &&\
   NZB_NOTIFY_VERSION="$(if [ -z "${NZB_NOTIFY_VERSION}" ]; then wget -q -O - https://api.github.com/repos/caronc/nzb-notify/releases | jq -r '.[]|.tag_name' | head -n 1; else echo "${NZB_NOTIFY_VERSION}"; fi)" &&\
   wget -nv "https://github.com/caronc/nzb-notify/archive/refs/tags/${NZB_NOTIFY_VERSION}.tar.gz" &&\
   tar xvf "${NZB_NOTIFY_VERSION}.tar.gz" &&\
@@ -53,7 +55,8 @@ RUN cd /tmp &&\
   rm "${NZB_NOTIFY_VERSION}.tar.gz" &&\
   cd /opt/nzb-notify &&\
   pip install --break-system-packages --no-cache-dir -r requirements.txt &&\
-  ln -s /usr/bin/python3 /usr/local/bin/python
+  ln -s /usr/bin/python3 /usr/local/bin/python;\
+  else echo "INFO: skipping installing nzb-notify; it's built into SABnzbd!"; fi
 
 # create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
