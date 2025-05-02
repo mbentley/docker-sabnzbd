@@ -21,7 +21,7 @@ RUN SHORT_PAR2CMDLINETURBO_VER="$(echo "${PAR2CMDLINETURBO_VER}" | awk -F 'v' '{
   cd /tmp &&\
   wget -nv "https://github.com/animetosho/par2cmdline-turbo/releases/download/${PAR2CMDLINETURBO_VER}/par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
   unzip "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
-  chmod +x "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64" &&\
+  chmod +x "par2" &&\
   mv -v "par2" /usr/local/bin/par2 &&\
   rm "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
   cd /usr/local/bin &&\
