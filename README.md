@@ -7,7 +7,7 @@ based off of debian:bookworm
 
 * `latest`, `4.5`, `4` ([Dockerfile](./Dockerfile))
 * `4.4`  ([Dockerfile](./Dockerfile))
-* `rc` ([Dockerfile.rc](./Dockerfile.rc))
+* `rc` ([Dockerfile](./Dockerfile))
 
 ### Archived Tags
 
@@ -26,3 +26,5 @@ Example usage:
 `docker run -d -p 8080:8080 --restart=always -v /data/sabnzbd:/etc/sabnzbd mbentley/sabnzbd`
 
 Note: In this example, all contents of `/data/sabnzbd` must be owned by `501:501` on the host.
+
+To build the pre-release version, set the build-arg `SABNZBD_PRERELEASE` to `true`.
