@@ -14,7 +14,7 @@ RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.l
   rm -rf /var/lib/apt/lists/*
 
 # set par2cmdline-turbo version to install
-ARG PAR2CMDLINETURBO_VER="v1.1.1"
+ARG PAR2CMDLINETURBO_VER="v1.3.0"
 
 # install par2cmdline-turbo
 RUN SHORT_PAR2CMDLINETURBO_VER="$(echo "${PAR2CMDLINETURBO_VER}" | awk -F 'v' '{print $2}')" &&\
