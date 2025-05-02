@@ -17,18 +17,15 @@ RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.l
 ARG PAR2CMDLINETURBO_VER="v1.1.1"
 
 # install par2cmdline-turbo
-RUN apt-get update &&\
-  apt-get install --no-install-recommends -y xz-utils &&\
+RUN SHORT_PAR2CMDLINETURBO_VER="$(echo "${PAR2CMDLINETURBO_VER}" | awk -F 'v' '{print $2}')" &&\
   cd /tmp &&\
-  wget -nv "https://github.com/animetosho/par2cmdline-turbo/releases/download/${PAR2CMDLINETURBO_VER}/par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64.xz" &&\
-  xz -d -v "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64.xz" &&\
-  chmod +x "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64" &&\
-  mv -v "par2cmdline-turbo-${PAR2CMDLINETURBO_VER}-linux-amd64" /usr/local/bin/par2 &&\
+  wget -nv "https://github.com/animetosho/par2cmdline-turbo/releases/download/${PAR2CMDLINETURBO_VER}/par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
+  unzip "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
+  chmod +x "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64" &&\
+  mv -v "par2" /usr/local/bin/par2 &&\
+  rm "par2cmdline-turbo-${SHORT_PAR2CMDLINETURBO_VER}-linux-amd64.zip" &&\
   cd /usr/local/bin &&\
-  for LINK in par2create par2repair par2verify; do ln -sv par2 "${LINK}"; done &&\
-  apt-get purge -y xz-utils &&\
-  apt-get autoremove -y &&\
-  rm -rf /var/lib/apt/lists/*
+  for LINK in par2create par2repair par2verify; do ln -sv par2 "${LINK}"; done
 
 # set major.minor version we want to install
 ARG SABNZBD_MAJ_MIN="4.5"
