@@ -29,11 +29,16 @@ RUN SHORT_PAR2CMDLINETURBO_VER="$(echo "${PAR2CMDLINETURBO_VER}" | awk -F 'v' '{
 
 # set major.minor version we want to install
 ARG SABNZBD_MAJ_MIN="4.5"
+
+# allow for manually specifying the complete version via build arg
 ARG SABNZBD_VERSION
+
+# install prerelease?
+ARG SABNZBD_PRERELEASE=false
 
 # install sabnzbd from source
 RUN cd /tmp &&\
-  SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep -F "${SABNZBD_MAJ_MIN}." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)" &&\
+  if [ "${SABNZBD_PRERELEASE}" = "true" ]; then SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|select(.prerelease == true)|.tag_name' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)"; else SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep -F "${SABNZBD_MAJ_MIN}." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)"; fi &&\
   wget -nv "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   tar xvf "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
