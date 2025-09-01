@@ -7,7 +7,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # install dependencies
 RUN sed -i 's/main/main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources &&\
   apt-get update &&\
-  apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full python3-setuptools python3-pip unrar unzip wget &&\
+  apt-get install --no-install-recommends -y ca-certificates flac jq lame libffi-dev libssl-dev locales mkvtoolnix p7zip-full python3 unrar unzip wget &&\
   echo 'LANG="en_US.UTF-8"' >> /etc/default/locale &&\
   sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen &&\
@@ -37,14 +37,16 @@ ARG SABNZBD_VERSION
 ARG SABNZBD_PRERELEASE=false
 
 # install sabnzbd from source
-RUN cd /tmp &&\
+RUN --mount=from=ghcr.io/astral-sh/uv,source=/uv,target=/bin/uv \
+  cd /tmp &&\
   if [ "${SABNZBD_PRERELEASE}" = "true" ]; then SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|select(.prerelease == true)|.tag_name' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)"; else SABNZBD_VERSION="$(if [ -z "${SABNZBD_VERSION}" ]; then wget -q -O - https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq -r '.[]|.tag_name' | grep -F "${SABNZBD_MAJ_MIN}." | grep -viE '(RC)|(Beta)' | head -n 1; else echo "${SABNZBD_VERSION}"; fi)"; fi &&\
   wget -nv "https://github.com/sabnzbd/sabnzbd/releases/download/${SABNZBD_VERSION}/SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   tar xvf "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   rm "SABnzbd-${SABNZBD_VERSION}-src.tar.gz" &&\
   mv "SABnzbd-${SABNZBD_VERSION}" /opt/sabnzbd &&\
   cd /opt/sabnzbd &&\
-  python3 -m pip install --break-system-packages --no-cache-dir -r requirements.txt -U
+  uv venv &&\
+  uv pip install -r requirements.txt --upgrade --no-cache
 
 # create non-root user
 RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
@@ -60,7 +62,8 @@ RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime &&\
 # set default environment variables
 ENV LANG=en_US.UTF-8 \
   LANGUAGE=en_US:en \
-  LC_ALL=en_US.UTF-8
+  LC_ALL=en_US.UTF-8 \
+  PATH="/opt/sabnzbd/.venv/bin:${PATH}"
 
 USER sabnzbd
 EXPOSE 8080
