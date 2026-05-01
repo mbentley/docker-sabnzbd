@@ -28,7 +28,7 @@ RUN SHORT_PAR2CMDLINETURBO_VER="$(echo "${PAR2CMDLINETURBO_VER}" | awk -F 'v' '{
   for LINK in par2create par2repair par2verify; do ln -sv par2 "${LINK}"; done
 
 # set major.minor version we want to install
-ARG SABNZBD_MAJ_MIN="4.5"
+ARG SABNZBD_MAJ_MIN="5.0"
 
 # allow for manually specifying the complete version via build arg
 ARG SABNZBD_VERSION

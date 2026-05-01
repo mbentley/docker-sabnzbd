@@ -5,14 +5,15 @@ based off of debian:bookworm
 
 ## Tags
 
-* `latest`, `4.5`, `4` ([Dockerfile](./Dockerfile))
-* `4.4`  ([Dockerfile](./Dockerfile))
+* `latest`, `5`, `5.0` ([Dockerfile](./Dockerfile))
+* `4`, `4.5` ([Dockerfile](./Dockerfile))
 * `rc` ([Dockerfile](./Dockerfile))
 
 ### Archived Tags
 
 These tags still exist but are no longer getting security updates:
 
+* `4.4`  ([Dockerfile](./Dockerfile))
 * `4.3`  ([Dockerfile](./Dockerfile))
 * `4.2` ([Dockerfile](./Dockerfile))
 * `4.1` ([Dockerfile](./Dockerfile))
